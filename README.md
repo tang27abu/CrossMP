@@ -16,7 +16,7 @@ conda activate crossmp
 ### Preprocess
 Preprocess the scATAC-seq and scRNA-seq data by running:
 ```bash
-python preprocess/preprocessing.py  --atac  ATAC.h5ad --rna   RNA.h5ad --organism human  --outdir output_dir
+python preprocess/preprocessing.py --atac ATAC.h5ad --rna RNA.h5ad --organism human --outdir output_dir
 ```
 Generating the gene activity scores after completing the scATAC-seq preprocessing:
 ```bash
