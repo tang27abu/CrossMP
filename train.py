@@ -1,7 +1,3 @@
-"""
-Code to train a model
-"""
-
 import os
 import sys
 import logging
@@ -47,7 +43,7 @@ def build_parser():
         description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     parser.add_argument(
-        "--datadir", "-d", required=True, type=str, help="Directory of input"
+        "--datadir", "-d", required=True, type=str, help="Directory of input data"
     )
     parser.add_argument(
         "--outdir", "-o", required=True, type=str, help="Directory to output to"
@@ -56,10 +52,7 @@ def build_parser():
         "--hidden", type=int, default=16, help="Hidden dimensions"
     )
     parser.add_argument(
-        "--lossweight",
-        type=float,
-        default=1.33,
-        help="Relative loss weight",
+        "--lossweight", type=float, default=1.33, help="Relative loss weight"
     )
     parser.add_argument(
         "--lr", "-l", type=float, default=0.01,  help="Learning rate"
@@ -68,12 +61,14 @@ def build_parser():
         "--batchsize", "-b", type=int,  default=512, help="Batch size"
     )
     parser.add_argument(
-        "--earlystop", type=int, default=1, help="Early stopping after N epochs"
+        "--earlystop", type=int, default=25, help="Early stopping after N epochs"
     )
     parser.add_argument(
         "--seed", type=int,  default=182822, help="Random seed to use"
     )
-    parser.add_argument("--device", default=0, type=int, help="Device to train on")
+    parser.add_argument(
+        "--device", default=0, type=int, help="Device to train on"
+    )
     return parser
 
 
@@ -85,9 +80,6 @@ def main():
     args = parser.parse_args()
 
     timestr = time.strftime("%Y%m%d-%H%M%S")
-
-    # args.outdir = os.path.join("/scratch/zl7w2/mcmp_out",args.outdir)
-    # args.datadir = os.path.join("/scratch/zl7w2/data/separate_dataset/H_Kidney_Cancer_Chromium")
 
     rna_ratio = 1
     atac_ratio = 1
@@ -151,16 +143,16 @@ def main():
         module__final_activations2=nn.Sigmoid(),
         module__flat_mode=True,
         module__seed=args.seed,
-        lr=args.lr,  # Based on hyperparam tuning
+        lr=args.lr,  
         criterion=loss_functions.QuadLoss,
-        criterion__loss2=loss_functions.BCELoss,  # handle output of encoded layer
-        criterion__loss2_weight=args.lossweight,  # numerically balance the two losses with different magnitudes
+        criterion__loss2=loss_functions.BCELoss,  
+        criterion__loss2_weight=args.lossweight,  
         criterion__record_history=True,
         optimizer=torch.optim.Adam,
         iterator_train__shuffle=True,
         device=d,
-        batch_size=args.batchsize,  # Based on  hyperparam tuning
-        max_epochs=2,
+        batch_size=args.batchsize,
+        max_epochs=300,
         callbacks=[
             skorch.callbacks.EarlyStopping(patience=args.earlystop),
             skorch.callbacks.LRScheduler(
@@ -190,45 +182,6 @@ def main():
     spliced_net.fit(sc_dual_train_dataset, y=None)
 
     logging.info("Evaluating on test set")
-    logging.info("Evaluating RNA > RNA")
-    sc_rna_test_preds = spliced_net.translate_1_to_1(sc_dual_test_dataset)
-    sc_rna_test_preds_anndata = sc.AnnData(
-        sc_rna_test_preds,
-        var=sc_rna_test_dataset.data_raw.var,
-        obs=sc_rna_test_dataset.data_raw.obs,
-    )
-    sc_rna_test_preds_anndata.write_h5ad(
-        os.path.join(outdir_name, "rna_rna_test_preds.h5ad")
-    )
-    
-    fig = plot_utils.plot_scatter_with_r(
-        sc_rna_test_dataset.data_raw.X,
-        sc_rna_test_preds,
-        one_to_one=True,
-        logscale=True,
-        density_heatmap=True,
-        title="RNA > RNA (test set)",
-        fname=os.path.join(outdir_name, f"rna_rna_scatter_log.png"),
-    )
-    plt.close(fig)
-
-    logging.info("Evaluating ATAC > ATAC")
-    sc_atac_test_preds = spliced_net.translate_2_to_2(sc_dual_test_dataset)
-    sc_atac_test_preds_anndata = sc.AnnData(
-        sc_atac_test_preds,
-        var=sc_atac_test_dataset.data_raw.var,
-        obs=sc_atac_test_dataset.data_raw.obs,
-    )
-    sc_atac_test_preds_anndata.write_h5ad(
-        os.path.join(outdir_name, "atac_atac_test_preds.h5ad")
-    )
-    fig = plot_utils.plot_auroc(
-        sc_atac_test_dataset.data_raw.X,
-        sc_atac_test_preds,
-        title_prefix="ATAC > ATAC",
-        fname=os.path.join(outdir_name, f"atac_atac_auroc.png"),
-    )
-    plt.close(fig)
 
     logging.info("Evaluating ATAC > RNA")
     sc_atac_rna_test_preds = spliced_net.translate_2_to_1(sc_dual_test_dataset)

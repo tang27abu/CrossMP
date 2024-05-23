@@ -1,7 +1,3 @@
-"""
-Loss functions
-"""
-
 import os
 import sys
 import functools

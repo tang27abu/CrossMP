@@ -1,7 +1,3 @@
-"""
-Code for loading in single-cell datasets
-"""
-
 import os
 import logging
 import anndata as ad
@@ -135,54 +131,7 @@ class TripletsDataset(Dataset):
         retval = torch.cat(x_pair), torch.cat(y_pair)
         
         return retval
-    
-# class CombinedDataset(Dataset):
-#     """
-#     Combines two datasets into one, where input is now (x1, x2) and
-#     output is (y1, y2). A Paired dataset simply combines x and y
-#     by returning the x input and y input as a tuple, and the x output
-#     and y output as a tuple, and does not "cross" between the datasets
-#     """
-#     def __init__(self, dataset_rna, dataset_atac, dataset_rp, dataset_degs):
-#         assert isinstance(
-#             dataset_rna, Dataset
-#         ), f"Bad type for dataset_rna: {type(dataset_rna)}"
-#         assert isinstance(
-#             dataset_atac, Dataset
-#         ), f"Bad type for dataset_atac: {type(dataset_atac)}"
-#         assert isinstance(
-#             dataset_rp, Dataset
-#         ), f"Bad type for dataset_rp: {type(dataset_rp)}"
-#         assert isinstance(
-#             dataset_degs, Dataset
-#         ), f"Bad type for dataset_degs: {type(datadataset_degsset_rp)}"
-#         assert len(dataset_rna) == len(dataset_atac), "Mismatched length"
-#         assert len(dataset_rna) == len(dataset_rp), "Mismatched length"
-#         assert len(dataset_rna) == len(dataset_degs), "Mismatched length"
-
-#         self.dataset_rna = dataset_rna
-#         self.dataset_atac = dataset_atac
-#         self.dataset_rp = dataset_rp
-#         self.dataset_degs = dataset_degs
-    
-#     def __len__(self):
-#         return len(self.dataset_rna)
-        
-#     # Inherits the init from SplicedDataset since we're doing the same thing - recording
-#     # the two different datasets
-#     def __getitem__(self, i):
-#         rp = self.dataset_rp[i]
-#         rna = self.dataset_rna[i]
-#         atac = self.dataset_atac[i]
-#         degs = self.dataset_degs[i]
-
-#         x_pair = (rna, degs, atac, rp)
-#         y_pair = (rna, atac)
-#         retval = torch.cat(x_pair), torch.cat(y_pair)
-        
-#         return retval
-
- 
+   
 
 class CombinedDataset(Dataset):
     """

@@ -186,10 +186,10 @@ def main():
     test_rna_set = size_norm_counts_m[test_atac_set.obs_names]
     rna_parsed_annot  = size_norm_counts_m[atac_parsed_annot_predefined.obs_names]
 
-    assert train_atac_set.shape[0] ==  train_rna_set.shape[0] # Assumes one dimensional vector of obs
-    assert valid_atac_set.shape[0] ==  valid_rna_set.shape[0] # Assumes one dimensional vector of obs
-    assert test_atac_set.shape[0] ==  test_rna_set.shape[0] # Assumes one dimensional vector of obs
-    assert atac_parsed_annot_predefined.shape[0] ==  rna_parsed_annot.shape[0] # Assumes one dimensional vector of obs
+    assert train_atac_set.shape[0] ==  train_rna_set.shape[0] 
+    assert valid_atac_set.shape[0] ==  valid_rna_set.shape[0] 
+    assert test_atac_set.shape[0] ==  test_rna_set.shape[0] 
+    assert atac_parsed_annot_predefined.shape[0] ==  rna_parsed_annot.shape[0] 
 
     with open(os.path.join(args.outdir, "rna_genes.txt"), "w") as sink:
         for gene in rna_parsed_annot.var_names:
@@ -236,18 +236,6 @@ def main():
     logging.info(
         f"Created test data split with {test_atac_set.n_obs} examples"
     )
-
-
-    # obs_names_1 = set(test_atac_set.obs_names)
-    # obs_names_2 = set(test_rna_set.obs_names)
-
-    # # Check if the observation names are identical and in the same order
-    # if obs_names_1 == obs_names_2:
-    #     print("Observations in adata1 and adata2 are the same and in the same order.")
-    # else:
-    #     print("Observations in adata1 and adata2 are not the same or not in the same order.")
-
-
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,25 @@
+name: crossmp
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.8.16
+  - cpuonly
+  - pytorch
+  - torchaudio
+  - torchvision
+  - skorch=0.11.0
+  - adjusttext=0.7.3.1
+  - mpl-scatter-density=0.7
+  - astropy
+  - captum
+  - cudnn
+  - gdown
+  - intervaltree
+  - python-igraph
+  - tensorboard
+  - anndata=0.8.0
+  - scanpy=1.9.1
+  - matplotlib=3.6.3
+  - pandas=1.5.3
+  - scikit-learn=1.2.0

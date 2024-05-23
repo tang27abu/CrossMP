@@ -1,15 +1,3 @@
-## conda activate MAESTRO
-## mamba deactivate
-# $ conda config --add channels defaults
-# $ conda config --add channels liulab-dfci
-# $ conda config --add channels bioconda
-# $ conda config --add channels conda-forge
-# # To make the installation faster, we recommend using mamba
-# $ conda install mamba -c conda-forge
-# $ mamba create -n MAESTRO maestro=1.5.1 -c liulab-dfci
-# # Activate the environment
-# $ conda activate MAESTRO
-#pip install tables==3.7.0
 
 library(reticulate)
 use_python("/scratch/zl7w2/tools/miniconda3/envs/MAESTRO/bin/python3", required = TRUE)
@@ -93,8 +81,6 @@ WriteH5ad <- function(data, filename) {
 args <- commandArgs(trailingOnly = TRUE)
 print(args)
 data_dir <- args[1]
-
-# data_dir <- "/scratch/zl7w2/data/test/"
 
 st <- format(Sys.time(), "%Y%m%d%H%M%S")
 tmp <- file.path(paste0("maestro_",st,".log"))

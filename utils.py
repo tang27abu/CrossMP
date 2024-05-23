@@ -1,9 +1,3 @@
-"""
-Utility functions
-
-Some functions live here because otherwise managing their import
-in other places would be overly difficult
-"""
 import os
 import sys
 import functools

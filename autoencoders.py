@@ -1,10 +1,3 @@
-"""
-Various models
-
-Autoencoder etiquette:
-- The LAST output should always be the encoded bottleneck layer (with the exception of DCA)
-"""
-
 import os
 import sys
 import logging
@@ -24,7 +17,7 @@ import skorch.utils
 
 import activations
 
-torch.backends.cudnn.deterministic = True  # For reproducibility
+torch.backends.cudnn.deterministic = True  
 torch.backends.cudnn.benchmark = False
 
 
@@ -258,15 +251,6 @@ class ChromDecoder(nn.Module):
         retval3 = torch.cat(retval3, dim=1)
         return retval1, retval2, retval3
 
-        # retval = []
-        # if retval1:
-        #     retval.append(torch.cat(retval1, dim=1))
-        # if retval2:
-        #     retval.append(torch.cat(retval2, dim=1))
-        # if retval3:
-        #     retval.append(torch.cat(retval3, dim=1))
-        # return tuple(retval)
-
 
 class AssymSplicedAutoEncoder(nn.Module):
     """
@@ -453,12 +437,6 @@ class SplicedAutoEncoderSkorchNet(skorch.NeuralNet):
         return sparse.vstack(retval)
 
     def score(self, true, pred):
-        """
-        Required for sklearn gridsearch
-        Since sklearn uses convention of (true, pred) in its score functions
-        We use the same
-        https://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics
-        """
         return self.get_loss(pred, true)
 
 
